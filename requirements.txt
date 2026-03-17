@@ -1,0 +1,22 @@
+# Core runtime
+numpy
+pillow
+requests
+safetensors
+sentencepiece
+
+# PyTorch stack (install a CUDA-matched torch build as needed)
+torch
+torchvision
+
+# HF ecosystem for local model folders in data/model
+transformers>=5.0.0
+datasets
+pyarrow
+qwen-vl-utils
+
+# PDF/image document flow used by LightOnOCR examples
+pypdfium2
+
+# Optional acceleration/inference server
+
