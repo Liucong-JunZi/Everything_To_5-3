@@ -1,1 +1,5 @@
-data/
+data/ocrbenchmark/HME100K
+.claude
+data/ocrbenchmark/LaTeX_OCR
+data/ocrbenchmark/ocr-benchmark
+data/ocrbenchmark/TC11_package
