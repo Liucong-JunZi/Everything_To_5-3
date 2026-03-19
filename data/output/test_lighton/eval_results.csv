@@ -1,0 +1,6 @@
+model,dataset,task,mean_score,samples,success_count,error_count,na_count,json_parse_rate,note
+LightOnOCR-2-1B,HME100K,formula_ocr,0.022222222222222233,5,5,0,0,,
+LightOnOCR-2-1B,LaTeX_OCR,formula_ocr,0.0,5,5,0,0,,
+LightOnOCR-2-1B,TC11_package,legacy_struct_eval,,0,0,0,0,,pending_legacy_eval
+LightOnOCR-2-1B,ocr-benchmark,json_extraction,0.0,2,2,0,0,0.0,
+LightOnOCR-2-1B,ocr-benchmark,markdown_extraction,0.07335183095542315,3,3,0,0,,

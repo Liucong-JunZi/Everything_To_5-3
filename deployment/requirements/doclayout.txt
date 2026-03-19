@@ -1,0 +1,6 @@
+numpy
+pillow
+safetensors
+torch
+torchvision
+transformers==5.3.0

@@ -1,0 +1,6 @@
+numpy
+pillow
+requests
+safetensors
+sentencepiece
+paddleocr[doc-parser]

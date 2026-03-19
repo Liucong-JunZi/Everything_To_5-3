@@ -1,0 +1,9 @@
+numpy
+pillow
+requests
+safetensors
+sentencepiece
+torch
+torchvision
+transformers==5.3.0
+pypdfium2

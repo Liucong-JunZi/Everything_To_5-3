@@ -1,0 +1,71 @@
+{
+  "summary": [
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "ocr-benchmark",
+      "task": "markdown_extraction",
+      "mean_score": null,
+      "samples": 3,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 3,
+      "json_parse_rate": null,
+      "note": "adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`"
+    },
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "ocr-benchmark",
+      "task": "json_extraction",
+      "mean_score": null,
+      "samples": 2,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 2,
+      "json_parse_rate": null,
+      "note": "adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`"
+    },
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "HME100K",
+      "task": "formula_ocr",
+      "mean_score": null,
+      "samples": 5,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 5,
+      "json_parse_rate": null,
+      "note": "adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`"
+    },
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "LaTeX_OCR",
+      "task": "formula_ocr",
+      "mean_score": null,
+      "samples": 5,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 5,
+      "json_parse_rate": null,
+      "note": "adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`"
+    },
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "TC11_package",
+      "task": "legacy_struct_eval",
+      "mean_score": null,
+      "samples": 0,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": "pending_legacy_eval"
+    }
+  ],
+  "detail_limit": 200,
+  "details": {
+    "PaddleOCR-VL-1.5|ocr-benchmark|markdown_extraction": [],
+    "PaddleOCR-VL-1.5|ocr-benchmark|json_extraction": [],
+    "PaddleOCR-VL-1.5|HME100K|formula_ocr": [],
+    "PaddleOCR-VL-1.5|LaTeX_OCR|formula_ocr": []
+  }
+}

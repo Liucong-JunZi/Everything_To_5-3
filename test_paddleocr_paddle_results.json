@@ -1,0 +1,42 @@
+{
+  "ocr_benchmark": [
+    {
+      "sample": "images/0.png",
+      "task": "markdown",
+      "prediction": "n\na\no\nt\no\ne\ne\ne\ne\ne\ne\ne\ni\ne\ne\n",
+      "ground_truth": "\"| Rank | Nation          | Gold | Silver | Bronze | Total |\\n|------|-----------------|------|--------|--------|-------|\\n| 1    | **Australia** (AUS)   | 2    | 1      | 0      | 3     |\\n| 2    | *",
+      "pred_len": 30,
+      "gt_len": 656,
+      "status": "success"
+    },
+    {
+      "sample": "images/1.png",
+      "task": "markdown",
+      "prediction": "n\na\no\nt\no\ne\ne\ne\ne\ne\ne\ne\ni\ne\ne\n",
+      "ground_truth": "\"# Company structure\\n\\nBD is structured to serve customers by providing unique solutions. The data below represents the company structure for FY 2019.\\n\\n## Revenue by geography\\n\\n(millions of dolla",
+      "pred_len": 30,
+      "gt_len": 1775,
+      "status": "success"
+    }
+  ],
+  "hme100k": [
+    {
+      "sample": "test_2.jpg",
+      "task": "formula",
+      "prediction": "n a o t o e e e e e e e i e",
+      "ground_truth": "\\frac { 5 } { 1 4 } = \\frac { 1 } { x }",
+      "pred_len": 28,
+      "gt_len": 39,
+      "status": "success"
+    },
+    {
+      "sample": "test_3.jpg",
+      "task": "formula",
+      "prediction": "n a o t o e e e e e e e i e e",
+      "ground_truth": "- 2 x ^ { 4 } - x ^ { 2 } + 5 = ( - x ^ { 2 } + 1 ) ( x + a ) + b = x ^ { 2 } + a x + 3 x - 3 a - b",
+      "pred_len": 30,
+      "gt_len": 99,
+      "status": "success"
+    }
+  ]
+}

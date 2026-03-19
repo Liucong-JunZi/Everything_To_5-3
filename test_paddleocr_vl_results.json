@@ -1,0 +1,30 @@
+{
+  "ocr_benchmark": [
+    {
+      "sample": "images/0.png",
+      "task": "markdown",
+      "status": "error",
+      "error": "Exception from the 'vlm' worker: only 0-dimensional arrays can be converted to Python scalars"
+    },
+    {
+      "sample": "images/1.png",
+      "task": "markdown",
+      "status": "error",
+      "error": "Exception from the 'vlm' worker: only 0-dimensional arrays can be converted to Python scalars"
+    }
+  ],
+  "hme100k": [
+    {
+      "sample": "test_2.jpg",
+      "task": "formula",
+      "status": "error",
+      "error": "Exception from the 'vlm' worker: only 0-dimensional arrays can be converted to Python scalars"
+    },
+    {
+      "sample": "test_3.jpg",
+      "task": "formula",
+      "status": "error",
+      "error": "Exception from the 'vlm' worker: only 0-dimensional arrays can be converted to Python scalars"
+    }
+  ]
+}

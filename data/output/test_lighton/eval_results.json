@@ -1,0 +1,165 @@
+{
+  "summary": [
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "ocr-benchmark",
+      "task": "markdown_extraction",
+      "mean_score": 0.07335183095542315,
+      "samples": 3,
+      "success_count": 3,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "ocr-benchmark",
+      "task": "json_extraction",
+      "mean_score": 0.0,
+      "samples": 2,
+      "success_count": 2,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": 0.0,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "HME100K",
+      "task": "formula_ocr",
+      "mean_score": 0.022222222222222233,
+      "samples": 5,
+      "success_count": 5,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "LaTeX_OCR",
+      "task": "formula_ocr",
+      "mean_score": 0.0,
+      "samples": 5,
+      "success_count": 5,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "TC11_package",
+      "task": "legacy_struct_eval",
+      "mean_score": null,
+      "samples": 0,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": "pending_legacy_eval"
+    }
+  ],
+  "detail_limit": 200,
+  "details": {
+    "LightOnOCR-2-1B|ocr-benchmark|markdown_extraction": [
+      {
+        "sample_id": "0:markdown",
+        "status": "success",
+        "score": 0.16981132075471694,
+        "prediction_preview": "There is no visible content in the provided image. The image appears to be a blank or empty page with no text, tables, equations, or other elements to extract. Therefore, no Markdown content can be generated from this image."
+      },
+      {
+        "sample_id": "1:markdown",
+        "status": "success",
+        "score": 0.032924467398321444,
+        "prediction_preview": "# Document Title\n\n## Section 1\n\n### Subsection 1.1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\n#### Subsubsection 1.1.1\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo "
+      },
+      {
+        "sample_id": "2:markdown",
+        "status": "success",
+        "score": 0.017319704713231077,
+        "prediction_preview": "There is no content to convert from image to markdown format."
+      }
+    ],
+    "LightOnOCR-2-1B|ocr-benchmark|json_extraction": [
+      {
+        "sample_id": "0:json",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "The provided image does not contain any text or content that can be converted into Markdown format. It appears to be a blank page with no visible text, tables, equations, or other elements to extract. If you have any specific content or text you would like to convert, please provide it."
+      },
+      {
+        "sample_id": "1:json",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "The provided image appears to be a blank document with no visible text, tables, equations, or other content. Therefore, there is no content to convert into Markdown format. If you have any specific content or document you would like to convert, please provide it."
+      }
+    ],
+    "LightOnOCR-2-1B|HME100K|formula_ocr": [
+      {
+        "sample_id": "test_2.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}\n$$\n\n$$\n\\int_{a}^{b} f(x) \\, dx = \\sum_{n=1}^{b} \\frac{f(n)}{n!}\n$$\n\n$$\n\\lim_{n \\to \\infty} \\frac{1}{n^2} = \\frac{1}{\\infty}\n$$\n\n$$\n\\text{If } f(x) = 0 \\text{ for all } x, \\text{ then } f(x) "
+      },
+      {
+        "sample_id": "test_3.jpg",
+        "status": "success",
+        "score": 0.11111111111111116,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only."
+      },
+      {
+        "sample_id": "test_5.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n$\\mathcal{L}$\n\n"
+      },
+      {
+        "sample_id": "test_6.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 4 }\n$$\n\n$$\n\\int _ { 1 } { 2 } { \\frac { 1 } { 2 } } { \\frac { 1 } { 2 } } = \\frac { 1 } { 4 }\n$$\n\n$$\n\\int _ { 1 } { 2 } { \\frac { 1 } { 2 } } { \\frac { 1 } { 2 } } = \\frac { 1 "
+      },
+      {
+        "sample_id": "test_7.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}\n$$\n\n$$\n\\int_{a}^{b} f(x) \\, dx = \\sum_{n=1}^{\\infty} \\frac{f(n)}{n!}\n$$\n\n$$\n\\log_{10} e = 1.618\n$$\n\n$$\n\\sin(30^\\circ) = \\frac{1}{2}\n$$\n\n$$\n\\text{m} = 10^3 \\, \\text{m/s}\n$$\n\n$$\n\\text{m} = 10^"
+      }
+    ],
+    "LightOnOCR-2-1B|LaTeX_OCR|formula_ocr": [
+      {
+        "sample_id": "latex_0",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } "
+      },
+      {
+        "sample_id": "latex_1",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } { 1 } { 1 } { 2 } { 1 } { 1 } { 2 } { 1 } { 1 } { 2 } { 1 } { 1 } { 2 } { 1 } { 1 } { 2 } { 1 } { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } { 1 } { 1 } "
+      },
+      {
+        "sample_id": "latex_2",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}\n$$\n\n$$\n\\int_{a}^{b} f(x) \\, dx = \\sum_{n=1}^{\\infty} \\frac{f(n)}{n!}\n$$\n\n$$\n\\lim_{n \\to \\infty} \\frac{1}{n} = 0\n$$\n\n$$\n\\sin(3\\pi/2) = \\frac{\\pi}{2}\n$$\n\n$$\n\\log_{10}(e) = 4.002\n$$\n\n$$\n\\text{m"
+      },
+      {
+        "sample_id": "latex_3",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 4 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\frac { 1 } { 2 } \\mathrm { d } \\lambda = \\frac { 1 } { 4 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\frac { 1 } { 2 } \\mathrm { d } \\lambda = \\frac { 1 } { 4 }\n"
+      },
+      {
+        "sample_id": "latex_4",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\n$$\n\\int _ { 1 } { 2 } \\tim"
+      }
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+numpy
+pillow
+requests
+safetensors
+sentencepiece
+pandas
+matplotlib
+transformers==5.3.0
+datasets
+pyarrow

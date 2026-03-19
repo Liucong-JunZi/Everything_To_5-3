@@ -1,0 +1,21 @@
+model,dataset,task,mean_score,samples,success_count,error_count,na_count,json_parse_rate,note
+LightOnOCR-2-1B,HME100K,formula_ocr,0.05555555555555558,2,2,0,0,,
+PP-DocLayoutV3_safetensors,HME100K,formula_ocr,,2,0,0,2,,not_supported
+PaddleOCR-VL-1.5,HME100K,formula_ocr,,2,0,0,2,,adapter_error: 'factor'
+ZhEn-Latex-OCR,HME100K,formula_ocr,0.0,2,0,2,0,,
+dots.ocr-1.5,HME100K,formula_ocr,0.0,2,0,2,0,,
+LightOnOCR-2-1B,LaTeX_OCR,formula_ocr,0.0,2,2,0,0,,
+PP-DocLayoutV3_safetensors,LaTeX_OCR,formula_ocr,,2,0,0,2,,not_supported
+PaddleOCR-VL-1.5,LaTeX_OCR,formula_ocr,,2,0,0,2,,adapter_error: 'factor'
+ZhEn-Latex-OCR,LaTeX_OCR,formula_ocr,0.0,2,0,2,0,,
+dots.ocr-1.5,LaTeX_OCR,formula_ocr,0.0,2,0,2,0,,
+LightOnOCR-2-1B,ocr-benchmark,json_extraction,0.0,1,1,0,0,0.0,
+PP-DocLayoutV3_safetensors,ocr-benchmark,json_extraction,,1,0,0,1,,not_supported
+PaddleOCR-VL-1.5,ocr-benchmark,json_extraction,,1,0,0,1,,adapter_error: 'factor'
+ZhEn-Latex-OCR,ocr-benchmark,json_extraction,,1,0,0,1,,not_supported
+dots.ocr-1.5,ocr-benchmark,json_extraction,0.0,1,0,1,0,,
+LightOnOCR-2-1B,ocr-benchmark,markdown_extraction,0.1677148846960168,1,1,0,0,,
+PP-DocLayoutV3_safetensors,ocr-benchmark,markdown_extraction,,1,0,0,1,,not_supported
+PaddleOCR-VL-1.5,ocr-benchmark,markdown_extraction,,1,0,0,1,,adapter_error: 'factor'
+ZhEn-Latex-OCR,ocr-benchmark,markdown_extraction,,1,0,0,1,,not_supported
+dots.ocr-1.5,ocr-benchmark,markdown_extraction,0.0,1,0,1,0,,

@@ -4,6 +4,8 @@ pillow
 requests
 safetensors
 sentencepiece
+pandas
+matplotlib
 
 # PyTorch stack (install a CUDA-matched torch build as needed)
 torch
@@ -19,4 +21,3 @@ qwen-vl-utils
 pypdfium2
 
 # Optional acceleration/inference server
-

@@ -1,0 +1,6 @@
+model,dataset,task,mean_score,samples,success_count,error_count,na_count,json_parse_rate,note
+PaddleOCR-VL-1.5,HME100K,formula_ocr,,5,0,0,5,,adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`
+PaddleOCR-VL-1.5,LaTeX_OCR,formula_ocr,,5,0,0,5,,adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`
+PaddleOCR-VL-1.5,TC11_package,legacy_struct_eval,,0,0,0,0,,pending_legacy_eval
+PaddleOCR-VL-1.5,ocr-benchmark,json_extraction,,2,0,0,2,,adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`
+PaddleOCR-VL-1.5,ocr-benchmark,markdown_extraction,,3,0,0,3,,adapter_error: This modeling file requires the following packages that were not found in your environment: einops. Run `pip install einops`

@@ -1,0 +1,5 @@
+model,dataset,task,mean_score,samples,success_count,error_count,na_count,json_parse_rate,note
+dots.ocr-1.5,HME100K,formula_ocr,0.0,500,0,500,0,,
+dots.ocr-1.5,LaTeX_OCR,formula_ocr,0.0,500,0,500,0,,
+dots.ocr-1.5,ocr-benchmark,json_extraction,0.0,250,0,250,0,,
+dots.ocr-1.5,ocr-benchmark,markdown_extraction,0.0,250,0,250,0,,
