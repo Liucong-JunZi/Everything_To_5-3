@@ -358,7 +358,7 @@ class GenericTransformerAdapter(BaseAdapter):
             "trust_remote_code": True,
             "torch_dtype": dtype,
         }
-        if self.model_name == MODEL_PADDLE_VL:
+        if self.model_name in (MODEL_PADDLE_VL, MODEL_DOTS):
             common_kwargs["attn_implementation"] = "sdpa"
         loaders = [
             AutoModelForImageTextToText,
@@ -401,12 +401,24 @@ class GenericTransformerAdapter(BaseAdapter):
         if hasattr(self.processor, "apply_chat_template"):
             try:
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-                inputs = self.processor(
-                    text=[text],
-                    images=[image],
-                    return_tensors="pt",
-                    padding=True,
-                )
+
+                if self.model_name == MODEL_DOTS:
+                    from qwen_vl_utils import process_vision_info
+                    image_inputs, video_inputs = process_vision_info(messages)
+                    inputs = self.processor(
+                        text=[text],
+                        images=image_inputs,
+                        videos=video_inputs,
+                        padding=True,
+                        return_tensors="pt",
+                    )
+                else:
+                    inputs = self.processor(
+                        text=[text],
+                        images=[image],
+                        return_tensors="pt",
+                        padding=True,
+                    )
             except Exception:
                 inputs = self.processor.apply_chat_template(
                     messages,
@@ -422,13 +434,11 @@ class GenericTransformerAdapter(BaseAdapter):
             input_length = int(inputs["input_ids"].shape[-1])
         inputs = self._to_device(inputs)
 
-        # 尝试使用所有参数，如果失败则过滤掉 mm_token_type_ids
         try:
             with torch.no_grad():
                 output_ids = self.model.generate(**inputs, max_new_tokens=self.max_new_tokens)
-        except (TypeError, ValueError) as e:
-            if "mm_token_type_ids" in str(e):
-                # 过滤掉不支持的参数
+        except Exception as e:
+            if "mm_token_type_ids" in str(e) or "model_kwargs" in str(e):
                 filtered_inputs = {k: v for k, v in inputs.items() if k != "mm_token_type_ids"}
                 with torch.no_grad():
                     output_ids = self.model.generate(**filtered_inputs, max_new_tokens=self.max_new_tokens)
@@ -437,10 +447,12 @@ class GenericTransformerAdapter(BaseAdapter):
 
         if output_ids.ndim == 2 and input_length > 0:
             output_ids = output_ids[:, input_length:]
+
         if hasattr(self.processor, "batch_decode"):
             text = self.processor.batch_decode(output_ids, skip_special_tokens=True)[0]
         else:
             text = self.processor.decode(output_ids[0], skip_special_tokens=True)
+
         return str(text).strip()
 
 
