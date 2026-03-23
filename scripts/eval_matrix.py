@@ -338,12 +338,7 @@ class GenericTransformerAdapter(BaseAdapter):
         self.model_path = str(model_path)
         self.max_new_tokens = max_new_tokens
         self.model_name = model_name
-        # dots.ocr-1.5 强制使用CPU（3B模型在8GB显存上会OOM）
-        if model_name == MODEL_DOTS:
-            self.device = "cpu"
-            print(f"[INFO] Using CPU for {model_name} (3B model requires more than 8GB VRAM)")
-        else:
-            self.device = self._select_device(device)
+        self.device = self._select_device(device)
         self.processor = AutoProcessor.from_pretrained(self.model_path, trust_remote_code=True)
         self.model = self._load_model()
         self.model.eval()
@@ -355,6 +350,9 @@ class GenericTransformerAdapter(BaseAdapter):
         return device
 
     def _model_dtype(self) -> torch.dtype:
+        # dots.ocr-1.5 和 PaddleOCR-VL-1.5 必须使用 bfloat16
+        if self.model_name in (MODEL_DOTS, MODEL_PADDLE_VL):
+            return torch.bfloat16
         return torch.float32 if self.device == "cpu" else torch.bfloat16
 
     def _load_model(self):
@@ -363,8 +361,13 @@ class GenericTransformerAdapter(BaseAdapter):
             "trust_remote_code": True,
             "torch_dtype": dtype,
         }
-        if self.model_name in (MODEL_PADDLE_VL, MODEL_DOTS):
+        # dots.ocr-1.5 必须使用 flash_attention_2 (从 README)
+        if self.model_name == MODEL_DOTS:
+            common_kwargs["attn_implementation"] = "flash_attention_2"
+        # PaddleOCR-VL-1.5 使用 sdpa
+        elif self.model_name == MODEL_PADDLE_VL:
             common_kwargs["attn_implementation"] = "sdpa"
+
         loaders = [
             AutoModelForImageTextToText,
             AutoModelForCausalLM,
@@ -374,13 +377,6 @@ class GenericTransformerAdapter(BaseAdapter):
             try:
                 model = loader.from_pretrained(self.model_path, **common_kwargs)
                 model.to(self.device)
-                # 对于CPU，递归转换所有参数和buffer为float32
-                if self.device == "cpu" and dtype == torch.float32:
-                    model = model.float()
-                    # 确保所有buffer也转换为float32
-                    for name, buf in model.named_buffers():
-                        if buf.dtype in (torch.bfloat16, torch.float16):
-                            buf.data = buf.data.float()
                 return model
             except Exception as exc:
                 last_error = exc
@@ -390,14 +386,10 @@ class GenericTransformerAdapter(BaseAdapter):
 
     def _to_device(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         moved = {}
-        target_dtype = self._model_dtype()
         for k, v in inputs.items():
             if isinstance(v, torch.Tensor):
-                # 先移动到设备
+                # 移动到设备
                 v = v.to(self.device)
-                # 对于CPU，强制转换为float32
-                if self.device == "cpu" and v.dtype in (torch.bfloat16, torch.float16):
-                    v = v.to(target_dtype)
                 moved[k] = v
             else:
                 moved[k] = v
@@ -416,27 +408,39 @@ class GenericTransformerAdapter(BaseAdapter):
 
         inputs = None
         input_length = 0
-        if hasattr(self.processor, "apply_chat_template"):
+
+        # PaddleOCR-VL-1.5: 使用完整的 apply_chat_template 参数（从 README）
+        if self.model_name == MODEL_PADDLE_VL and hasattr(self.processor, "apply_chat_template"):
+            inputs = self.processor.apply_chat_template(
+                messages,
+                add_generation_prompt=True,
+                tokenize=True,
+                return_dict=True,
+                return_tensors="pt",
+                images_kwargs={"size": {"shortest_edge": self.processor.image_processor.min_pixels, "longest_edge": 1280 * 28 * 28}},
+            )
+        # dots.ocr-1.5: 使用 process_vision_info（从 README）
+        elif self.model_name == MODEL_DOTS and hasattr(self.processor, "apply_chat_template"):
+            from qwen_vl_utils import process_vision_info
+            text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+            image_inputs, video_inputs = process_vision_info(messages)
+            inputs = self.processor(
+                text=[text],
+                images=image_inputs,
+                videos=video_inputs,
+                padding=True,
+                return_tensors="pt",
+            )
+        # 其他模型：标准流程
+        elif hasattr(self.processor, "apply_chat_template"):
             try:
                 text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-
-                if self.model_name == MODEL_DOTS:
-                    from qwen_vl_utils import process_vision_info
-                    image_inputs, video_inputs = process_vision_info(messages)
-                    inputs = self.processor(
-                        text=[text],
-                        images=image_inputs,
-                        videos=video_inputs,
-                        padding=True,
-                        return_tensors="pt",
-                    )
-                else:
-                    inputs = self.processor(
-                        text=[text],
-                        images=[image],
-                        return_tensors="pt",
-                        padding=True,
-                    )
+                inputs = self.processor(
+                    text=[text],
+                    images=[image],
+                    return_tensors="pt",
+                    padding=True,
+                )
             except Exception:
                 inputs = self.processor.apply_chat_template(
                     messages,
@@ -445,6 +449,7 @@ class GenericTransformerAdapter(BaseAdapter):
                     return_dict=True,
                     return_tensors="pt",
                 )
+
         if inputs is None:
             inputs = self.processor(images=image, text=prompt, return_tensors="pt")
 
@@ -463,13 +468,20 @@ class GenericTransformerAdapter(BaseAdapter):
             else:
                 raise
 
-        if output_ids.ndim == 2 and input_length > 0:
+        # PaddleOCR-VL-1.5: 去掉最后一个 token（从 README）
+        if self.model_name == MODEL_PADDLE_VL:
+            text = self.processor.decode(output_ids[0][input_length:-1], skip_special_tokens=True)
+        elif output_ids.ndim == 2 and input_length > 0:
             output_ids = output_ids[:, input_length:]
-
-        if hasattr(self.processor, "batch_decode"):
-            text = self.processor.batch_decode(output_ids, skip_special_tokens=True)[0]
+            if hasattr(self.processor, "batch_decode"):
+                text = self.processor.batch_decode(output_ids, skip_special_tokens=True)[0]
+            else:
+                text = self.processor.decode(output_ids[0], skip_special_tokens=True)
         else:
-            text = self.processor.decode(output_ids[0], skip_special_tokens=True)
+            if hasattr(self.processor, "batch_decode"):
+                text = self.processor.batch_decode(output_ids, skip_special_tokens=True)[0]
+            else:
+                text = self.processor.decode(output_ids[0], skip_special_tokens=True)
 
         return str(text).strip()
 
@@ -503,7 +515,9 @@ class ZhEnLatexAdapter(BaseAdapter):
         self.model.eval()
 
     def predict(self, image: Image.Image, prompt: str, task: str) -> str:
-        pixels = self.feature_extractor(image, return_tensors="pt").pixel_values.to(self.device)
+        pixels = self.feature_extractor(image, return_tensors="pt").pixel_values
+        # 确保 pixels 的 dtype 与模型一致
+        pixels = pixels.to(device=self.device, dtype=self.dtype)
         with torch.no_grad():
             output = self.model.generate(pixels, max_new_tokens=self.max_new_tokens)
         return self.tokenizer.decode(output[0], skip_special_tokens=True).strip()

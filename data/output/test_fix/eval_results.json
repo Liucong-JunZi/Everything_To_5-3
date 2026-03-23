@@ -1,0 +1,20 @@
+{
+  "summary": [
+    {
+      "model": "PaddleOCR-VL-1.5",
+      "dataset": "HME100K",
+      "task": "formula_ocr",
+      "mean_score": null,
+      "samples": 20,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 20,
+      "json_parse_rate": null,
+      "note": "adapter_error: data\\model\\PaddleOCR-VL-1.5 does not appear to have a file named processing_paddleocr_vl.py. Checkout 'https://huggingface.co/data\\model\\PaddleOCR-VL-1.5/tree/main' for available files."
+    }
+  ],
+  "detail_limit": 200,
+  "details": {
+    "PaddleOCR-VL-1.5|HME100K|formula_ocr": []
+  }
+}
