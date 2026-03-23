@@ -1,0 +1,129 @@
+{
+  "summary": [
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "ocr-benchmark",
+      "task": "markdown_extraction",
+      "mean_score": 0.08263395739186574,
+      "samples": 2,
+      "success_count": 2,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "ocr-benchmark",
+      "task": "json_extraction",
+      "mean_score": 0.0,
+      "samples": 1,
+      "success_count": 1,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": 0.0,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "HME100K",
+      "task": "formula_ocr",
+      "mean_score": 0.037037037037037056,
+      "samples": 3,
+      "success_count": 3,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "LaTeX_OCR",
+      "task": "formula_ocr",
+      "mean_score": 0.0,
+      "samples": 3,
+      "success_count": 3,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": ""
+    },
+    {
+      "model": "LightOnOCR-2-1B",
+      "dataset": "TC11_package",
+      "task": "legacy_struct_eval",
+      "mean_score": null,
+      "samples": 0,
+      "success_count": 0,
+      "error_count": 0,
+      "na_count": 0,
+      "json_parse_rate": null,
+      "note": "pending_legacy_eval"
+    }
+  ],
+  "detail_limit": 200,
+  "details": {
+    "LightOnOCR-2-1B|ocr-benchmark|markdown_extraction": [
+      {
+        "sample_id": "0:markdown",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "<table>\n  <tr>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n"
+      },
+      {
+        "sample_id": "1:markdown",
+        "status": "success",
+        "score": 0.16526791478373148,
+        "prediction_preview": "$\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\text{ $\\te"
+      }
+    ],
+    "LightOnOCR-2-1B|ocr-benchmark|json_extraction": [
+      {
+        "sample_id": "0:json",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "<table>\n  <tr>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n    <td>地</td>\n"
+      }
+    ],
+    "LightOnOCR-2-1B|HME100K|formula_ocr": [
+      {
+        "sample_id": "test_2.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}\n$$\n\nThe expression $\\frac{1}{2} \\times \\frac{3}{4} = \\frac{3}{8}$ is correct because the numerator $\\frac{1}{2}$ is multiplied by $\\frac{3}{4}$ to get $\\frac{3}{8}$ , which is the same as th"
+      },
+      {
+        "sample_id": "test_3.jpg",
+        "status": "success",
+        "score": 0.11111111111111116,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only."
+      },
+      {
+        "sample_id": "test_5.jpg",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{x^2 + 1}\n$$\n\n$$\n\\int_{a}^{b} f(x) \\, dx\n$$\n\n$$\n\\lim_{x \\to \\infty} \\frac{1}{x^2 + 1}\n$$\n\n$$\n\\sin \\left( \\frac{\\pi}{4} \\right)\n$$\n\n$$\n\\cos \\left( \\frac{\\pi}{4} \\right)\n$$\n\n$$\n\\text{If } x = 0, \\text{ then } f(0) = 0\n$$\n\n$$\n\\tex"
+      }
+    ],
+    "LightOnOCR-2-1B|LaTeX_OCR|formula_ocr": [
+      {
+        "sample_id": "latex_0",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\nThe expression is correct.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { 2 } = \\frac { 1 } { 2 }\n$$\n\nThe expression is correct.\n\n$$\n\\frac { 1 } { 2 } \\times \\frac { 1 } { "
+      },
+      {
+        "sample_id": "latex_1",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{x} \\cdot \\frac{1}{y} = \\frac{1}{xy}\n$$\n\n$$\n\\int_{a}^{b} f(x) \\, dx = \\int_{a}^{b} f(x) \\, dx\n$$\n\n$$\n\\lim_{x \\to \\infty} f(x) = \\lim_{x \\to \\infty} f(x) = \\infty\n$$\n\n$$\n\\frac{1}{x^2 + 1} = \\frac{1}{x^2 + 1}\n$$\n\n$$\n\\sin(3\\pi/2) "
+      },
+      {
+        "sample_id": "latex_2",
+        "status": "success",
+        "score": 0.0,
+        "prediction_preview": "Recognize the mathematical expression and output LaTeX only.\n\n$$\n\\frac{1}{x^2 + 1}\n$$\n\n$$\n\\int \\frac{1}{x^2 + 1} \\, dx\n$$\n\n$$\n\\lim_{x \\to 1} \\frac{1}{x^2 + 1}\n$$\n\n$$\n\\sqrt{2}\n$$\n\n$$\n\\log_2 10\n$$\n\n$$\n\\sin 2\\pi \\times 10\n$$\n\n$$\n\\text{Hello, world}\n$$\n\n$$\n\\text{Hello, world}\n$$\n\n$$\n\\text{Hello, world}\n"
+      }
+    ]
+  }
+}

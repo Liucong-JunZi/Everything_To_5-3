@@ -338,7 +338,12 @@ class GenericTransformerAdapter(BaseAdapter):
         self.model_path = str(model_path)
         self.max_new_tokens = max_new_tokens
         self.model_name = model_name
-        self.device = self._select_device(device)
+        # dots.ocr-1.5 强制使用CPU（3B模型在8GB显存上会OOM）
+        if model_name == MODEL_DOTS:
+            self.device = "cpu"
+            print(f"[INFO] Using CPU for {model_name} (3B model requires more than 8GB VRAM)")
+        else:
+            self.device = self._select_device(device)
         self.processor = AutoProcessor.from_pretrained(self.model_path, trust_remote_code=True)
         self.model = self._load_model()
         self.model.eval()
@@ -350,7 +355,7 @@ class GenericTransformerAdapter(BaseAdapter):
         return device
 
     def _model_dtype(self) -> torch.dtype:
-        return torch.bfloat16 if self.device == "cuda" else torch.float32
+        return torch.float32 if self.device == "cpu" else torch.bfloat16
 
     def _load_model(self):
         dtype = self._model_dtype()
@@ -369,6 +374,13 @@ class GenericTransformerAdapter(BaseAdapter):
             try:
                 model = loader.from_pretrained(self.model_path, **common_kwargs)
                 model.to(self.device)
+                # 对于CPU，递归转换所有参数和buffer为float32
+                if self.device == "cpu" and dtype == torch.float32:
+                    model = model.float()
+                    # 确保所有buffer也转换为float32
+                    for name, buf in model.named_buffers():
+                        if buf.dtype in (torch.bfloat16, torch.float16):
+                            buf.data = buf.data.float()
                 return model
             except Exception as exc:
                 last_error = exc
@@ -378,9 +390,15 @@ class GenericTransformerAdapter(BaseAdapter):
 
     def _to_device(self, inputs: Dict[str, Any]) -> Dict[str, Any]:
         moved = {}
+        target_dtype = self._model_dtype()
         for k, v in inputs.items():
             if isinstance(v, torch.Tensor):
-                moved[k] = v.to(self.device)
+                # 先移动到设备
+                v = v.to(self.device)
+                # 对于CPU，强制转换为float32
+                if self.device == "cpu" and v.dtype in (torch.bfloat16, torch.float16):
+                    v = v.to(target_dtype)
+                moved[k] = v
             else:
                 moved[k] = v
         return moved
@@ -463,9 +481,25 @@ class ZhEnLatexAdapter(BaseAdapter):
         self.model_path = str(model_path)
         self.max_new_tokens = max_new_tokens
         self.device = "cuda" if (device == "auto" and torch.cuda.is_available()) else ("cpu" if device == "auto" else device)
+
+        # 确定dtype
+        self.dtype = torch.float16 if self.device == "cuda" else torch.float32
+
         self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_path, trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
-        self.model = VisionEncoderDecoderModel.from_pretrained(self.model_path, trust_remote_code=True).to(self.device)
+        self.model = VisionEncoderDecoderModel.from_pretrained(
+            self.model_path,
+            trust_remote_code=True,
+            torch_dtype=self.dtype
+        ).to(self.device)
+
+        # 确保模型参数和buffer都在正确的dtype
+        if self.device == "cpu":
+            self.model = self.model.float()
+            for name, buf in self.model.named_buffers():
+                if buf.dtype in (torch.bfloat16, torch.float16):
+                    buf.data = buf.data.float()
+
         self.model.eval()
 
     def predict(self, image: Image.Image, prompt: str, task: str) -> str:
