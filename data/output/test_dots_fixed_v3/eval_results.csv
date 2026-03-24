@@ -1,2 +1,0 @@
-model,dataset,task,mean_score,samples,success_count,error_count,na_count,json_parse_rate,note
-dots.ocr-1.5,HME100K,formula_ocr,,20,0,0,20,,adapter_error: No module named 'transformers_modules.dots'

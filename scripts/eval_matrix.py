@@ -340,6 +340,18 @@ class GenericTransformerAdapter(BaseAdapter):
         self.model_name = model_name
         self.device = self._select_device(device)
         self.processor = AutoProcessor.from_pretrained(self.model_path, trust_remote_code=True)
+
+        # 某些模型（如 dots.ocr-1.5）的 processor.chat_template 为 None，需要手动加载
+        if self.processor.chat_template is None:
+            chat_template_path = Path(self.model_path) / "chat_template.json"
+            if chat_template_path.exists():
+                import json
+                with open(chat_template_path, 'r', encoding='utf-8') as f:
+                    ct_data = json.load(f)
+                if 'chat_template' in ct_data:
+                    self.processor.chat_template = ct_data['chat_template']
+                    print(f"[INFO] Manually loaded chat_template for {model_name}")
+
         self.model = self._load_model()
         self.model.eval()
 
@@ -361,9 +373,14 @@ class GenericTransformerAdapter(BaseAdapter):
             "trust_remote_code": True,
             "torch_dtype": dtype,
         }
-        # dots.ocr-1.5 必须使用 flash_attention_2 (从 README)
+        # dots.ocr-1.5 优先使用 flash_attention_2，如果不可用则回退到 sdpa
         if self.model_name == MODEL_DOTS:
-            common_kwargs["attn_implementation"] = "flash_attention_2"
+            try:
+                import flash_attn
+                common_kwargs["attn_implementation"] = "flash_attention_2"
+            except ImportError:
+                print(f"[WARN] flash_attn not available, using sdpa for {self.model_name}")
+                common_kwargs["attn_implementation"] = "sdpa"
         # PaddleOCR-VL-1.5 使用 sdpa
         elif self.model_name == MODEL_PADDLE_VL:
             common_kwargs["attn_implementation"] = "sdpa"
@@ -420,8 +437,18 @@ class GenericTransformerAdapter(BaseAdapter):
                 images_kwargs={"size": {"shortest_edge": self.processor.image_processor.min_pixels, "longest_edge": 1280 * 28 * 28}},
             )
         # dots.ocr-1.5: 使用 process_vision_info（从 README）
-        elif self.model_name == MODEL_DOTS and hasattr(self.processor, "apply_chat_template"):
+        elif self.model_name == MODEL_DOTS:
             from qwen_vl_utils import process_vision_info
+            # 直接构建消息
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": image},
+                        {"type": "text", "text": prompt},
+                    ],
+                }
+            ]
             text = self.processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
             image_inputs, video_inputs = process_vision_info(messages)
             inputs = self.processor(
@@ -471,6 +498,14 @@ class GenericTransformerAdapter(BaseAdapter):
         # PaddleOCR-VL-1.5: 去掉最后一个 token（从 README）
         if self.model_name == MODEL_PADDLE_VL:
             text = self.processor.decode(output_ids[0][input_length:-1], skip_special_tokens=True)
+        # dots.ocr-1.5: 特殊的 decode 方式（从 README 第 156-159 行）
+        elif self.model_name == MODEL_DOTS:
+            # 使用切片方式：[out[len(inp):] for inp, out in zip(inputs.input_ids, generated_ids)]
+            generated_text = self.processor.batch_decode(
+                [output_ids[0][input_length:]],
+                skip_special_tokens=True,
+            )[0]
+            text = generated_text
         elif output_ids.ndim == 2 and input_length > 0:
             output_ids = output_ids[:, input_length:]
             if hasattr(self.processor, "batch_decode"):
@@ -498,7 +533,8 @@ class ZhEnLatexAdapter(BaseAdapter):
         self.dtype = torch.float16 if self.device == "cuda" else torch.float32
 
         self.feature_extractor = AutoImageProcessor.from_pretrained(self.model_path, trust_remote_code=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True)
+        # README 要求设置 max_len=296
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path, trust_remote_code=True, max_len=296)
         self.model = VisionEncoderDecoderModel.from_pretrained(
             self.model_path,
             trust_remote_code=True,
@@ -519,8 +555,12 @@ class ZhEnLatexAdapter(BaseAdapter):
         # 确保 pixels 的 dtype 与模型一致
         pixels = pixels.to(device=self.device, dtype=self.dtype)
         with torch.no_grad():
+            # ZhEn-Latex-OCR README 显示直接用 pixel_values，不需要额外参数
             output = self.model.generate(pixels, max_new_tokens=self.max_new_tokens)
-        return self.tokenizer.decode(output[0], skip_special_tokens=True).strip()
+        # README 显示需要后处理替换 \[ 和 \]
+        result = self.tokenizer.decode(output[0], skip_special_tokens=True)
+        result = result.replace('\\[', '\\begin{align*}').replace('\\]', '\\end{align*}')
+        return result.strip()
 
 
 def adapter_for_model(model_name: str, model_path: Path, device: str, max_new_tokens: int) -> BaseAdapter:
@@ -528,6 +568,9 @@ def adapter_for_model(model_name: str, model_path: Path, device: str, max_new_to
         return UnsupportedAdapter()
     if model_name == MODEL_ZHEN_LATEX:
         return ZhEnLatexAdapter(model_path, device=device, max_new_tokens=max_new_tokens)
+    # dots.ocr-1.5 需要 max_new_tokens=24000（从 README 第 155 行）
+    if model_name == MODEL_DOTS:
+        return GenericTransformerAdapter(model_path, device=device, max_new_tokens=24000, model_name=model_name)
     return GenericTransformerAdapter(model_path, device=device, max_new_tokens=max_new_tokens, model_name=model_name)
 
 
